@@ -1,0 +1,238 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #0a0a0a;
+    color: #fff;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #0a0a0a;
+}
+
+header img {
+    height: 25px;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+}
+
+header nav a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+}
+
+header nav a:last-child {
+    background-color: #00b341;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00b341;
+}
+
+.container {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.container h1 {
+    font-size: 3em;
+    font-weight: 300;
+    margin-bottom: 30px;
+}
+
+.container h1 span {
+    color: #00b341;
+}
+
+.container p {
+    font-size: 1.1em;
+    color: #ccc;
+    margin-bottom: 40px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.buttons a, .buttons button {
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background-color: #00b341;
+}
+
+.btn-secondary {
+    background-color: #444;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #555;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 40px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+
+th {
+    background-color: #1a1a1a;
+    font-weight: bold;
+}
+
+textarea {
+    width: 100%;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.frase-item {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.frase {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.traducao {
+    font-style: italic;
+    color: #aaa;
+}
+
+.quantidade-frases {
+    margin-top: 30px;
+}
+
+.quantidade-frases p {
+    margin-bottom: 10px;
+}
+
+.quantidade-frases .buttons {
+    justify-content: center;
+}
+
+.quantidade-frases .btn-secondary {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    line-height: 40px;
+    text-align: center;
+}
+
+.quantidade-frases .btn-secondary.active {
+    background-color: #00b341;
+}
+
+.quantidade-frases select {
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Adicione isso ao final do arquivo style.css */
+
+.exemplo-frases {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.exemplo-frases h2 {
+    color: #00b341;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.dica-texto {
+    color: #ccc;
+    font-size: 1em;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.exemplo-frases .frase-item {
+    background-color: #222;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.exemplo-frases .frase {
+    font-size: 1.1em;
+    margin: 0;
+    color: #fff;
+}
+
+.exemplo-frases .traducao {
+    font-size: 1em;
+    margin: 5px 0 0;
+    color: #aaa;
+    font-style: italic;
+}
+
+#frases {
+    width: 100%;
+    min-height: 150px;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1em;
+    margin-bottom: 20px;
+}
+
+.contador {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #00b341;
+}
+
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}

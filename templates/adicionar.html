@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Novas Frases</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">One Frase</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/historico">Histórico</a>
+            <a href="/adicionar">Adicionar Frases</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Adicionar Novas <span>Frases</span></h1>
+        <p>Cole suas frases aqui. Coloque cada frase em inglês em uma linha e sua tradução em português na linha seguinte.</p>
+        <div class="exemplo-frases">
+            <h2>Dica:</h2>
+            <p class="dica-texto">Peça para o ChatGPT gerar algumas frases em inglês (ou qualquer outra língua) e suas traduções, colocando a frase em cima e a tradução embaixo.</p>
+            <div class="frase-item">
+                <p class="frase">Good morning!</p>
+                <p class="traducao">Bom dia!</p>
+            </div>
+            <div class="frase-item">
+                <p class="frase">How are you?</p>
+                <p class="traducao">Como você está?</p>
+            </div>
+        </div>
+        <textarea id="frases" rows="10" placeholder="Insira suas frases aqui..."></textarea>
+        <div class="buttons">
+            <button onclick="salvarFrases()" class="btn-primary">Salvar Frases</button>
+        </div>
+    </div>
+
+    <script>
+        function salvarFrases() {
+            const frases = document.getElementById('frases').value;
+            fetch('/adicionar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `frases=${encodeURIComponent(frases)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    document.getElementById('frases').value = '';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Frase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">One Frase</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/historico">Histórico</a>
+            <a href="/adicionar">Adicionar Frases</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Suas Frases <span>Diárias</span></h1>
+        {% if ultima_frase %}
+            <div class="ultima-frase">
+                <h2>Última Frase Gerada:</h2>
+                <div class="frase-item">
+                    <p class="frase">{{ ultima_frase[0] }} - {{ ultima_frase[1] }}</p>
+                </div>
+            </div>
+        {% endif %}
+        <div id="frases-container">
+            {% for frase in frases %}
+                <div class="frase-item">
+                    <p class="frase">{{ loop.index }}) {{ frase.frase }} - {{ frase.traducao }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="buttons">
+            <button onclick="getFrases()" id="gerarFraseBtn" class="btn-primary" {% if not pode_gerar %}disabled{% endif %}>
+                Gerar Nova(s) Frase(s)
+            </button>
+            <button onclick="limparBanco()" class="btn-secondary">Limpar Banco de Dados</button>
+        </div>
+        <div id="contador" class="contador" {% if pode_gerar %}style="display: none;"{% endif %}>
+            Próxima frase disponível em: <span id="tempo-restante"></span>
+        </div>
+        <div class="quantidade-frases">
+            <p>Quantidade de frases por dia:</p>
+            <div class="buttons">
+                <button onclick="setQuantidadeFrases(1)" class="btn-secondary {% if quantidade_frases == 1 %}active{% endif %}">1</button>
+                <button onclick="setQuantidadeFrases(2)" class="btn-secondary {% if quantidade_frases == 2 %}active{% endif %}">2</button>
+                <button onclick="setQuantidadeFrases(3)" class="btn-secondary {% if quantidade_frases == 3 %}active{% endif %}">3</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var tempoRestante = {{ tempo_restante|tojson }};
+        var contadorElement = document.getElementById('contador');
+        var tempoRestanteElement = document.getElementById('tempo-restante');
+        var gerarFraseBtn = document.getElementById('gerarFraseBtn');
+
+        function atualizarContador() {
+            if (tempoRestante > 0) {
+                var horas = Math.floor(tempoRestante / 3600);
+                var minutos = Math.floor((tempoRestante % 3600) / 60);
+                var segundos = tempoRestante % 60;
+                tempoRestanteElement.textContent = 
+                    horas.toString().padStart(2, '0') + ':' +
+                    minutos.toString().padStart(2, '0') + ':' +
+                    segundos.toString().padStart(2, '0');
+                tempoRestante--;
+                setTimeout(atualizarContador, 1000);
+            } else {
+                contadorElement.style.display = 'none';
+                gerarFraseBtn.disabled = false;
+            }
+        }
+
+        if (tempoRestante > 0) {
+            atualizarContador();
+        }
+
+        function getFrases() {
+            fetch('/get_frases')
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        var container = document.getElementById('frases-container');
+                        container.innerHTML = '';
+                        data.frases.forEach(function(item, index) {
+                            var fraseDiv = document.createElement('div');
+                            fraseDiv.className = 'frase-item';
+                            fraseDiv.innerHTML = '<p class="frase">' + (index + 1) + ') ' + item.frase + ' - ' + item.traducao + '</p>';
+                            container.appendChild(fraseDiv);
+                        });
+                        gerarFraseBtn.disabled = true;
+                        tempoRestante = data.tempo_restante;
+                        contadorElement.style.display = 'block';
+                        atualizarContador();
+
+                        // Atualizar a última frase gerada
+                        var ultimaFraseDiv = document.querySelector('.ultima-frase');
+                        if (ultimaFraseDiv) {
+                            ultimaFraseDiv.querySelector('.frase').textContent = data.frases[data.frases.length - 1].frase + ' - ' + data.frases[data.frases.length - 1].traducao;
+                        } else {
+                            var novaUltimaFraseDiv = document.createElement('div');
+                            novaUltimaFraseDiv.className = 'ultima-frase';
+                            novaUltimaFraseDiv.innerHTML = 
+                                '<h2>Última Frase Gerada:</h2>' +
+                                '<div class="frase-item">' +
+                                    '<p class="frase">' + data.frases[data.frases.length - 1].frase + ' - ' + data.frases[data.frases.length - 1].traducao + '</p>' +
+                                '</div>';
+                            container.parentNode.insertBefore(novaUltimaFraseDiv, container);
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                });
+        }
+
+        function setQuantidadeFrases(quantidade) {
+            fetch('/set_quantidade_frases', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'quantidade=' + encodeURIComponent(quantidade)
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        function limparBanco() {
+            if (confirm("Tem certeza que deseja limpar todo o banco de dados? Isso removerá todas as frases e o histórico.")) {
+                fetch('/limpar_banco', { method: 'POST' })
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) {
+                        alert(data.message);
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+</html>

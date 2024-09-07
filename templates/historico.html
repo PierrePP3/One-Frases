@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Frases</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">One Frase</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/historico">Histórico</a>
+            <a href="/adicionar">Adicionar Frases</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Histórico de <span>Frases</span></h1>
+        {% if historico %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Frase</th>
+                        <th>Tradução</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data, frase, traducao in historico %}
+                    <tr>
+                        <td>{{ data }}</td>
+                        <td>{{ frase }}</td>
+                        <td>{{ traducao }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="buttons">
+                <button onclick="limparHistorico()" class="btn-secondary">Limpar Histórico</button>
+            </div>
+        {% else %}
+            <p>Nenhum histórico disponível.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function limparHistorico() {
+            if (confirm("Tem certeza que deseja limpar todo o histórico?")) {
+                fetch('/limpar_historico', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Histórico limpo com sucesso!");
+                            location.reload();
+                        } else {
+                            alert("Erro ao limpar o histórico.");
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
